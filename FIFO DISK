@@ -1,0 +1,25 @@
+Sub buenardo()
+'
+' buenardo Macro
+'
+
+'
+    Range("J5:J14").Select
+    Selection.Copy
+    Range("C4:C13").Select
+    ActiveSheet.Paste
+    Range("C4").Select
+    Application.CutCopyMode = False
+    ActiveCell.FormulaR1C1 = _
+        "=IF(RC[-1]>0,(IF(RC[2]-RC[-1]<1,((RC[2]-RC[-1])*-1),RC[2]-RC[-1])),0)"
+    Range("C5").Select
+    ActiveCell.FormulaR1C1 = _
+        "=IF(RC[-1]>0,(IF(R[-1]C[-1]-RC[-1]<1,((R[-1]C[-1]-RC[-1])*-1),R[-1]C[-1]-RC[-1])),0)"
+    Range("G18").Select
+    ActiveCell.FormulaR1C1 = ""
+    Range("C17").Select
+    ActiveCell.FormulaR1C1 = "=SUM(R[-13]C:R[-4]C)/R[-5]C[4]"
+    Range("G12").Select
+    ActiveCell.FormulaR1C1 = "=COUNTIF(R[-8]C[-5]:R[1]C[-5],"">1"")"
+    Range("G13").Select
+End Sub
