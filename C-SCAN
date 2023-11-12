@@ -1,0 +1,144 @@
+Function Contar(solicitudes As Range) As Integer
+    Dim Con As Integer
+    Con = 0
+    Dim i As Integer
+    For i = 1 To solicitudes.Rows.Count
+        If solicitudes.Cells(i, 1).Value >= 0 Then
+            Con = Con + 1
+        End If
+    Next i
+    Contar = Con
+End Function
+
+Sub CScan()
+    Dim solicitudes As Range
+    Dim cabezal As Integer
+    Dim tamano As Integer
+    Dim DistanciaT As Double
+    Dim Distancia As Integer
+    Dim PosicionActual As Integer
+    Dim NumSolicitudes As Integer
+    Dim i As Integer
+
+    Set solicitudes = Range("C2:C" & Cells(Rows.Count, 3).End(xlUp).Row)
+    
+    cabezal = Range("B2").Value
+    tamano = Range("A2").Value
+
+    NumSolicitudes = Contar(solicitudes)
+
+    PosicionActual = cabezal
+    For i = 1 To NumSolicitudes - 1
+        For j = i + 1 To NumSolicitudes
+            If solicitudes.Cells(i, 1).Value > solicitudes.Cells(j, 1).Value Then
+                temp = solicitudes.Cells(i, 1).Value
+                solicitudes.Cells(i, 1).Value = solicitudes.Cells(j, 1).Value
+                solicitudes.Cells(j, 1).Value = temp
+            End If
+        Next j
+    Next i
+
+    'For i = 1 To NumSolicitudes
+    '    If solicitudes.Cells(i, 1).Value >= cabezal Then
+     '       Distancia = Abs(PosicionActual - solicitudes.Cells(i, 1).Value)
+      '      Cells(i + 2, 5).Value = solicitudes.Cells(i, 1).Value
+       '     Cells(i + 2, 6).Value = Distancia
+        '    DistanciaT = DistanciaT + Distancia
+         '   PosicionActual = solicitudes.Cells(i, 1).Value
+        'End If
+    'Next i
+
+
+For i = 1 To NumSolicitudes
+        If solicitudes.Cells(i, 1).Value >= cabezal Then
+            Distancia = Abs(PosicionActual - solicitudes.Cells(i, 1).Value)
+            Cells(30, i).Value = solicitudes.Cells(i, 1).Value
+            Cells(32, i).Value = Distancia
+            DistanciaT = DistanciaT + Distancia
+            PosicionActual = solicitudes.Cells(i, 1).Value
+        End If
+    Next i
+
+'    For i = 1 To NumSolicitudes
+ '       If solicitudes.Cells(i, 1).Value <= cabezal Then
+  '          Distancia = Abs(PosicionActual - solicitudes.Cells(i, 1).Value)
+   '         Cells(i + 2, 5).Value = solicitudes.Cells(i, 1).Value
+    '        Cells(i + 2, 6).Value = Distancia
+     '       PosicionActual = solicitudes.Cells(i, 1).Value
+      '      DistanciaT = DistanciaT + Distancia
+       ' End If
+    'Next i
+    
+    For i = 1 To NumSolicitudes
+        If solicitudes.Cells(i, 1).Value <= cabezal Then
+            Distancia = Abs(PosicionActual - solicitudes.Cells(i, 1).Value)
+            Cells(30, i).Value = solicitudes.Cells(i, 1).Value
+            Cells(32, i).Value = Distancia
+           PosicionActual = solicitudes.Cells(i, 1).Value
+            DistanciaT = DistanciaT + Distancia
+        End If
+    Next i
+
+    Dim TT As Double
+    TT = DistanciaT / Contar(solicitudes)
+    Range("G3").Value = TT ' Longitud media de búsqueda
+End Sub
+
+
+Sub SimularCSCAN()
+    Dim solicitudes As Range
+    Dim cabezal As Integer
+    Dim i As Integer
+    Dim PosicionActual As Integer
+    Dim Distancia As Integer
+    
+    ' Obtén las solicitudes de la columna C
+    Set solicitudes = Range("C2:C" & Cells(Rows.Count, 3).End(xlUp).Row)
+    
+    ' Obtén el cabezal de la celda B2
+    cabezal = Range("B2").Value
+    
+    ' Inicializa la posición actual
+    PosicionActual = cabezal
+    
+    ' Ordena las solicitudes en orden ascendente
+    solicitudes.Sort Key1:=Range("C2"), Order1:=xlAscending, Header:=xlNo
+    
+    ' Recorre las solicitudes en dirección hacia adelante
+    For i = 1 To solicitudes.Rows.Count
+        If solicitudes.Cells(i, 1).Value >= cabezal Then
+            Distancia = Abs(PosicionActual - solicitudes.Cells(i, 1).Value)
+            
+            solicitudes.Cells(i, 1).Interior.Color = RGB(255, 0, 0) ' Rojo
+        
+            Application.Wait Now + TimeValue("00:00:01")
+            
+            'solicitudes.Cells(i, 1).Interior.ColorIndex = xlNone
+            PosicionActual = solicitudes.Cells(i, 1).Value
+        End If
+    Next i
+    
+    ' Vuelve al inicio del disco y recorre las solicitudes en dirección hacia adelante
+    For i = 1 To solicitudes.Rows.Count
+        If solicitudes.Cells(i, 1).Value < cabezal Then
+            Distancia = Abs(PosicionActual - solicitudes.Cells(i, 1).Value)
+            
+            solicitudes.Cells(i, 1).Interior.Color = RGB(255, 0, 0) ' Rojo
+            
+            Application.Wait Now + TimeValue("00:00:01")
+            
+            'solicitudes.Cells(i, 1).Interior.ColorIndex = xlNone
+            PosicionActual = solicitudes.Cells(i, 1).Value
+        End If
+    Next i
+End Sub
+
+
+
+
+
+
+
+
+
+
